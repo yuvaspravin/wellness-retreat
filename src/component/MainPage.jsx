@@ -137,6 +137,9 @@ const MainPage = () => {
       return titleList.includes(searchValueUpper);
     });
     setSuggestions(filteredSuggestions);
+    if (value == "") {
+      setSuggestClose(false);
+    }
     console.log(filteredSuggestions, "filteredSuggestions");
   };
   const handleSuggestionClick = (suggestion) => {
