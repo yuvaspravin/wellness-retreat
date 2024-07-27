@@ -8,10 +8,10 @@ const MainPage = () => {
   const suggestionListRef = useRef(null);
   const [isDesktopView, setIsDesktopView] = useState(window.innerWidth > 640);
   const [productList, setProductList] = useState([]);
-
   const [paginationProductData, setPaginationData] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [tagList, setTageList] = useState([]);
   const [selectedDate, SetSelectedDate] = useState("");
   const [filterdate, setFilterDate] = useState({});
   const [searchValue, setSearchValue] = useState("");
@@ -23,6 +23,13 @@ const MainPage = () => {
     fetchData(page);
   }, [page]);
 
+  // all products
+  useEffect(() => {
+    apiService.allProduct().then((data) => {
+      setProductList(data?.data);
+    });
+  }, []);
+  // for Pagination geting data function
   const fetchData = async (page) => {
     setIsLoading(true);
     try {
@@ -30,7 +37,7 @@ const MainPage = () => {
       setPaginationData(response.data);
       console.log(response, "response");
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("error", error);
     } finally {
       setIsLoading(false);
     }
@@ -55,14 +62,6 @@ const MainPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // all products
-
-  useEffect(() => {
-    apiService.allProduct().then((data) => {
-      setProductList(data?.data);
-    });
-  }, []);
-  const [tagList, setTageList] = useState([]);
   useEffect(() => {
     const allTags = productList.reduce((acc, e) => {
       return [...acc, ...e.tag];
@@ -125,6 +124,7 @@ const MainPage = () => {
     }
   };
 
+  // search filter
   const handleInputChange = (event) => {
     const value = event.target.value;
 
@@ -186,6 +186,7 @@ const MainPage = () => {
         <div className="filterProduct md:flex  w-[100%]">
           <div className="md:flex md:w-[25%] ">
             <div className="md:flex-1 my-3 md:ml-2">
+              {/* date filter */}
               <select
                 id="countries"
                 className=" border-[1px] bg-[#efefef] rounded w-[100%]  md:text-white md:bg-[#1b3252] md:hover:bg-blue-800  md:font-medium md:rounded-lg md:text-sm  px-3 py-3 text-left md:dark:bg-blue-600 md:dark:hover:bg-[#1b3252]"
